@@ -13,10 +13,27 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
+        return new Response(file_get_contents($this->getImage()), 200, ['Content-Type' => 'image/gif']);
+    }
+
+    /**
+     * @Route("/.gif")
+     */
+    public function imageAction()
+    {
+        return $this->redirect($this->getImage());
+    }
+
+    /**
+     * Get a random image
+     *
+     * @return string
+     */
+    private function getImage(): string
+    {
         $root = $this->getParameter('kernel.root_dir');
         $images = array_filter(explode(PHP_EOL, file_get_contents($root . '/../images.txt')));
-        $image = $images[array_rand($images)];
 
-        return new Response(file_get_contents($image), 200, ['Content-Type' => 'image/gif']);
+        return $images[array_rand($images)];
     }
 }
